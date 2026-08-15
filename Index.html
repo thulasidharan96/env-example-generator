@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <meta
+    name="description"
+    content="Privacy-first client-side .env to .env.example generator. No backend, no uploads, no dependencies."
+  />
+
+  <meta
+    name="keywords"
+    content=".env, env example, dotenv, environment variables, developer tools, privacy"
+  />
+
+  <meta name="theme-color" content="#0b0f14" />
+
+  <title>ENV Example Generator</title>
+
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --surface: #11161d;
+      --surface-2: #171d26;
+      --surface-3: #1d2530;
+
+      --border: #27313d;
+      --border-hover: #3a4654;
+
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-subtle: #64748b;
+
+      --accent: #60a5fa;
+      --accent-hover: #93c5fd;
+
+      --success: #4ade80;
+      --danger: #f87171;
+
+      --radius: 12px;
+      --radius-sm: 8px;
+
+      --font:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+      --mono:
+        "SFMono-Regular",
+        "Cascadia Code",
+        "Roboto Mono",
+        Consolas,
+        "Liberation Mono",
+        monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(
+          circle at top,
+          rgba(96, 165, 250, 0.08),
+          transparent 35%
+        ),
+        var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+    }
+
+    button,
+    textarea,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* -----------------------------
+       Header
+    ----------------------------- */
+
+    header {
+      border-bottom: 1px solid var(--border);
+      background: rgba(11, 15, 20, 0.9);
+      backdrop-filter: blur(16px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .header-inner {
+      width: min(1500px, calc(100% - 32px));
+      margin: 0 auto;
+      min-height: 72px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+
+      display: grid;
+      place-items: center;
+
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .brand-text {
+      min-width: 0;
+    }
+
+    .brand-title {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .brand-subtitle {
+      margin: 2px 0 0;
+      color: var(--text-subtle);
+      font-size: 12px;
+    }
+
+    .privacy-badge {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+
+      padding: 7px 10px;
+
+      border: 1px solid rgba(74, 222, 128, 0.2);
+      background: rgba(74, 222, 128, 0.06);
+
+      border-radius: 999px;
+
+      color: #86efac;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .privacy-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 10px rgba(74, 222, 128, 0.6);
+    }
+
+    /* -----------------------------
+       Main
+    ----------------------------- */
+
+    main {
+      width: min(1500px, calc(100% - 32px));
+      margin: 0 auto;
+
+      flex: 1;
+
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+
+      padding: 30px 0 40px;
+    }
+
+    .hero {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .hero-copy {
+      max-width: 760px;
+    }
+
+    .hero h1 {
+      margin: 0;
+
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+
+    .hero p {
+      margin: 12px 0 0;
+
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .hero-code {
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    /* -----------------------------
+       Controls
+    ----------------------------- */
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+
+      padding: 12px;
+
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+
+    .toolbar-group {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .control {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      min-height: 36px;
+      padding: 0 11px;
+
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+
+      border-radius: var(--radius-sm);
+
+      color: var(--text-muted);
+      font-size: 13px;
+
+      transition:
+        border-color 0.15s ease,
+        background 0.15s ease,
+        color 0.15s ease;
+    }
+
+    .control:hover {
+      border-color: var(--border-hover);
+      color: var(--text);
+      background: var(--surface-3);
+    }
+
+    .control input {
+      accent-color: var(--accent);
+    }
+
+    .button {
+      min-height: 36px;
+
+      padding: 0 13px;
+
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+
+      border-radius: var(--radius-sm);
+
+      color: var(--text);
+
+      font-size: 13px;
+      font-weight: 600;
+
+      transition:
+        transform 0.15s ease,
+        border-color 0.15s ease,
+        background 0.15s ease;
+    }
+
+    .button:hover {
+      border-color: var(--border-hover);
+      background: var(--surface-3);
+    }
+
+    .button:active {
+      transform: translateY(1px);
+    }
+
+    .button.primary {
+      border-color: rgba(96, 165, 250, 0.35);
+      background: rgba(96, 165, 250, 0.12);
+      color: #bfdbfe;
+    }
+
+    .button.primary:hover {
+      background: rgba(96, 165, 250, 0.2);
+    }
+
+    .button.danger {
+      color: #fca5a5;
+    }
+
+    /* -----------------------------
+       Editor
+    ----------------------------- */
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+
+      min-height: 620px;
+
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+
+      overflow: hidden;
+
+      background: var(--surface);
+    }
+
+    .panel {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel + .panel {
+      border-left: 1px solid var(--border);
+    }
+
+    .panel-header {
+      min-height: 52px;
+
+      padding: 0 15px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .panel-title code {
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .panel-meta {
+      color: var(--text-subtle);
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .editor {
+      flex: 1;
+      position: relative;
+
+      display: flex;
+
+      background: #0d1218;
+    }
+
+    .line-numbers {
+      width: 52px;
+      flex-shrink: 0;
+
+      padding: 16px 10px;
+
+      overflow: hidden;
+
+      border-right: 1px solid rgba(39, 49, 61, 0.65);
+
+      color: #475569;
+
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.7;
+
+      text-align: right;
+
+      user-select: none;
+    }
+
+    .line-numbers div {
+      height: 22.1px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 100%;
+      min-height: 560px;
+
+      resize: none;
+
+      padding: 16px;
+
+      border: 0;
+      outline: 0;
+
+      background: transparent;
+      color: #dbeafe;
+
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.7;
+
+      tab-size: 2;
+
+      overflow: auto;
+    }
+
+    textarea::placeholder {
+      color: #475569;
+    }
+
+    textarea::selection {
+      background: rgba(96, 165, 250, 0.2);
+    }
+
+    #output {
+      color: #bbf7d0;
+    }
+
+    .output-editor {
+      position: relative;
+      flex: 1;
+    }
+
+    .output-editor textarea {
+      position: absolute;
+      inset: 0;
+    }
+
+    /* -----------------------------
+       Empty state
+    ----------------------------- */
+
+    .empty-state {
+      position: absolute;
+      inset: 0;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      pointer-events: none;
+    }
+
+    .empty-state-content {
+      max-width: 340px;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .empty-icon {
+      width: 48px;
+      height: 48px;
+
+      margin: 0 auto 14px;
+
+      display: grid;
+      place-items: center;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      background: var(--surface-2);
+
+      color: var(--text-subtle);
+      font-family: var(--mono);
+      font-size: 14px;
+    }
+
+    .empty-state strong {
+      display: block;
+
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .empty-state p {
+      margin: 7px 0 0;
+
+      color: var(--text-subtle);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    /* -----------------------------
+       Footer
+    ----------------------------- */
+
+    footer {
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .footer-inner {
+      width: min(1500px, calc(100% - 32px));
+      min-height: 54px;
+      margin: 0 auto;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 15px;
+    }
+
+    .footer-text {
+      color: var(--text-subtle);
+      font-size: 12px;
+    }
+
+    .footer-text code {
+      color: var(--text-muted);
+      font-family: var(--mono);
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 12px;
+    }
+
+    .footer-links a:hover {
+      color: var(--text);
+    }
+
+    /* -----------------------------
+       Toast
+    ----------------------------- */
+
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+
+      z-index: 100;
+
+      max-width: calc(100vw - 40px);
+
+      padding: 11px 14px;
+
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+
+      background: #151b23;
+      color: var(--text);
+
+      font-size: 13px;
+      font-weight: 600;
+
+      box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.35);
+
+      opacity: 0;
+      transform: translateY(10px);
+
+      pointer-events: none;
+
+      transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* -----------------------------
+       Responsive
+    ----------------------------- */
+
+    @media (max-width: 900px) {
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .panel + .panel {
+        border-left: 0;
+        border-top: 1px solid var(--border);
+      }
+
+      .panel {
+        min-height: 480px;
+      }
+
+      textarea {
+        min-height: 400px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .header-inner,
+      main,
+      .footer-inner {
+        width: min(100% - 20px, 1500px);
+      }
+
+      .header-inner {
+        min-height: 62px;
+      }
+
+      .brand-subtitle {
+        display: none;
+      }
+
+      .privacy-badge {
+        font-size: 11px;
+      }
+
+      main {
+        padding-top: 20px;
+      }
+
+      .hero {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .hero h1 {
+        font-size: 30px;
+      }
+
+      .toolbar {
+        align-items: stretch;
+      }
+
+      .toolbar-group {
+        width: 100%;
+      }
+
+      .toolbar-group:last-child {
+        justify-content: flex-end;
+      }
+
+      .workspace {
+        min-height: auto;
+      }
+
+      .panel {
+        min-height: 430px;
+      }
+
+      .footer-inner {
+        padding: 12px 0;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+
+    <!-- Header -->
+    <header>
+      <div class="header-inner">
+
+        <div class="brand">
+          <div class="brand-icon">{ }</div>
+
+          <div class="brand-text">
+            <p class="brand-title">ENV Example Generator</p>
+            <p class="brand-subtitle">
+              Convert .env → .env.example
+            </p>
+          </div>
+        </div>
+
+        <div class="privacy-badge">
+          <span class="privacy-dot"></span>
+          Runs entirely in your browser
+        </div>
+
+      </div>
+    </header>
+
+    <!-- Main -->
+    <main>
+
+      <!-- Hero -->
+      <section class="hero">
+
+        <div class="hero-copy">
+          <h1>
+            Turn secrets into a safe template.
+          </h1>
+
+          <p>
+            Generate a sanitized <code>.env.example</code> from your
+            <code>.env</code> file without uploading anything.
+          </p>
+        </div>
+
+        <div class="hero-code">
+          .env → .env.example
+        </div>
+
+      </section>
+
+      <!-- Toolbar -->
+      <section class="toolbar">
+
+        <div class="toolbar-group">
+
+          <label class="control">
+            <input
+              type="checkbox"
+              id="keepComments"
+              checked
+            />
+            Preserve comments
+          </label>
+
+          <label class="control">
+            <input
+              type="checkbox"
+              id="usePlaceholders"
+            />
+            Use placeholders
+          </label>
+
+        </div>
+
+        <div class="toolbar-group">
+
+          <button
+            class="button"
+            id="sampleBtn"
+            type="button"
+          >
+            Load Sample
+          </button>
+
+          <button
+            class="button danger"
+            id="clearBtn"
+            type="button"
+          >
+            Clear
+          </button>
+
+          <button
+            class="button primary"
+            id="copyBtn"
+            type="button"
+          >
+            Copy
+          </button>
+
+          <button
+            class="button primary"
+            id="downloadBtn"
+            type="button"
+          >
+            Download
+          </button>
+
+        </div>
+
+      </section>
+
+      <!-- Workspace -->
+      <section class="workspace">
+
+        <!-- Input -->
+        <section class="panel">
+
+          <div class="panel-header">
+
+            <div class="panel-title">
+              Source
+              <code>.env</code>
+            </div>
+
+            <div
+              class="panel-meta"
+              id="inputMeta"
+            >
+              0 lines
+            </div>
+
+          </div>
+
+          <div class="editor">
+
+            <div
+              class="line-numbers"
+              id="inputLines"
+              aria-hidden="true"
+            >
+              <div>1</div>
+            </div>
+
+            <textarea
+              id="input"
+              spellcheck="false"
+              autocomplete="off"
+              autocorrect="off"
+              autocapitalize="off"
+              placeholder="# Paste your .env file here
+
+DATABASE_URL=postgres://user:password@localhost:5432/app
+API_KEY=your-secret-key
+PORT=3000"
+              aria-label="Source .env content"
+            ></textarea>
+
+            <div
+              class="empty-state"
+              id="emptyState"
+            >
+              <div class="empty-state-content">
+                <div class="empty-icon">
+                  .env
+                </div>
+
+                <strong>
+                  Paste your .env file
+                </strong>
+
+                <p>
+                  Your environment variables are processed
+                  locally in this browser.
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- Output -->
+        <section class="panel">
+
+          <div class="panel-header">
+
+            <div class="panel-title">
+              Generated
+              <code>.env.example</code>
+            </div>
+
+            <div
+              class="panel-meta"
+              id="outputMeta"
+            >
+              0 lines
+            </div>
+
+          </div>
+
+          <div class="editor output-editor">
+
+            <div
+              class="line-numbers"
+              id="outputLines"
+              aria-hidden="true"
+            >
+              <div>1</div>
+            </div>
+
+            <textarea
+              id="output"
+              readonly
+              spellcheck="false"
+              aria-label="Generated .env.example content"
+              placeholder="Your sanitized .env.example will appear here..."
+            ></textarea>
+
+          </div>
+
+        </section>
+
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-inner">
+
+        <div class="footer-text">
+          <code>env-example-generator</code>
+          · privacy-first · client-side
+        </div>
+
+        <div class="footer-links">
+          <a
+            href="https://github.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub
+          </a>
+
+          <a
+            href="https://github.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Source
+          </a>
+        </div>
+
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Toast -->
+  <div
+    class="toast"
+    id="toast"
+    role="status"
+    aria-live="polite"
+  ></div>
+
+  <script>
+    "use strict";
+
+    /*
+     * ---------------------------------------------------------
+     * ENV Example Generator
+     * ---------------------------------------------------------
+     *
+     * Zero dependencies.
+     * Zero backend.
+     * Client-side processing only.
+     * ---------------------------------------------------------
+     */
+
+    const input = document.getElementById("input");
+    const output = document.getElementById("output");
+
+    const keepComments =
+      document.getElementById("keepComments");
+
+    const usePlaceholders =
+      document.getElementById("usePlaceholders");
+
+    const copyBtn =
+      document.getElementById("copyBtn");
+
+    const downloadBtn =
+      document.getElementById("downloadBtn");
+
+    const sampleBtn =
+      document.getElementById("sampleBtn");
+
+    const clearBtn =
+      document.getElementById("clearBtn");
+
+    const toast =
+      document.getElementById("toast");
+
+    const emptyState =
+      document.getElementById("emptyState");
+
+    const inputLines =
+      document.getElementById("inputLines");
+
+    const outputLines =
+      document.getElementById("outputLines");
+
+    const inputMeta =
+      document.getElementById("inputMeta");
+
+    const outputMeta =
+      document.getElementById("outputMeta");
+
+
+    /*
+     * ---------------------------------------------------------
+     * Sample
+     * ---------------------------------------------------------
+     */
+
+    const SAMPLE_ENV = `# Application
+NODE_ENV=development
+PORT=3000
+
+# Database
+DATABASE_URL=postgresql://admin:super-secret-password@localhost:5432/myapp
+
+# Authentication
+JWT_SECRET=super-secret-jwt-key
+SESSION_SECRET=another-secret
+
+# API
+API_URL=https://api.example.com
+API_KEY=sk-example-secret-key
+
+# Optional configuration
+DEBUG=true
+LOG_LEVEL=info
+
+# Shell export syntax
+export REDIS_URL=redis://localhost:6379
+export STRIPE_SECRET_KEY=sk_test_example123`;
+
+
+    /*
+     * ---------------------------------------------------------
+     * Environment parser
+     * ---------------------------------------------------------
+     */
+
+    function processEnv(
+      source,
+      preserveComments,
+      placeholders
+    ) {
+      const lines = source.split(/\r?\n/);
+      const result = [];
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+
+        /*
+         * Preserve empty lines.
+         */
+        if (!trimmed) {
+          result.push("");
+          continue;
+        }
+
+        /*
+         * Comments.
+         */
+        if (trimmed.startsWith("#")) {
+          if (preserveComments) {
+            result.push(line);
+          }
+
+          continue;
+        }
+
+        /*
+         * Ignore lines that aren't assignments.
+         */
+        const equalsIndex = line.indexOf("=");
+
+        if (equalsIndex === -1) {
+          /*
+           * Preserve unusual lines rather than
+           * silently destroying them.
+           */
+          result.push(line);
+          continue;
+        }
+
+        const rawKeyPart =
+          line.slice(0, equalsIndex).trim();
+
+        /*
+         * Detect:
+         *
+         * export KEY=value
+         */
+        const exportMatch =
+          rawKeyPart.match(/^export\s+/);
+
+        const isExport =
+          Boolean(exportMatch);
+
+        const cleanKey =
+          rawKeyPart
+            .replace(/^export\s+/, "")
+            .trim();
+
+        /*
+         * Validate that the key is non-empty.
+         */
+        if (!cleanKey) {
+          result.push(line);
+          continue;
+        }
+
+        /*
+         * Generate sanitized value.
+         */
+        const value = placeholders
+          ? `<${cleanKey}>`
+          : "";
+
+        result.push(
+          `${isExport ? "export " : ""}${cleanKey}=${value}`
+        );
+      }
+
+      return result.join("\n");
+    }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Line number rendering
+     * ---------------------------------------------------------
+     */
+
+    function renderLineNumbers(
+      element,
+      text
+    ) {
+      const count =
+        text === ""
+          ? 1
+          : text.split(/\r?\n/).length;
+
+      const fragment =
+        document.createDocumentFragment();
+
+      for (let i = 1; i <= count; i++) {
+        const div =
+          document.createElement("div");
+
+        div.textContent = i;
+
+        fragment.appendChild(div);
+      }
+
+      element.replaceChildren(fragment);
+    }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Metadata
+     * ---------------------------------------------------------
+     */
+
+    function updateMetadata() {
+      const source =
+        input.value;
+
+      const generated =
+        output.value;
+
+      const sourceLines =
+        source === ""
+          ? 0
+          : source.split(/\r?\n/).length;
+
+      const generatedLines =
+        generated === ""
+          ? 0
+          : generated.split(/\r?\n/).length;
+
+      inputMeta.textContent =
+        `${sourceLines} ${sourceLines === 1 ? "line" : "lines"}`;
+
+      outputMeta.textContent =
+        `${generatedLines} ${generatedLines === 1 ? "line" : "lines"}`;
+    }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Generate
+     * ---------------------------------------------------------
+     */
+
+    function generate() {
+      const source =
+        input.value;
+
+      const result =
+        processEnv(
+          source,
+          keepComments.checked,
+          usePlaceholders.checked
+        );
+
+      output.value = result;
+
+      renderLineNumbers(
+        inputLines,
+        source
+      );
+
+      renderLineNumbers(
+        outputLines,
+        result
+      );
+
+      updateMetadata();
+
+      emptyState.style.display =
+        source.length === 0
+          ? "flex"
+          : "none";
+    }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Toast
+     * ---------------------------------------------------------
+     */
+
+    let toastTimer;
+
+    function showToast(message) {
+      toast.textContent = message;
+
+      toast.classList.add("show");
+
+      clearTimeout(toastTimer);
+
+      toastTimer =
+        setTimeout(() => {
+          toast.classList.remove("show");
+        }, 2200);
+    }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Copy
+     * ---------------------------------------------------------
+     */
+
+    async function copyOutput() {
+      if (!output.value) {
+        showToast("Nothing to copy");
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(
+          output.value
+        );
+
+        showToast(
+          "Copied .env.example to clipboard"
+        );
+      } catch {
+        /*
+         * Fallback for browsers where
+         * Clipboard API isn't available.
+         */
+        output.focus();
+        output.select();
+
+        const successful =
+          document.execCommand("copy");
+
+        output.setSelectionRange(0, 0);
+
+        showToast(
+          successful
+            ? "Copied .env.example to clipboard"
+            : "Copy failed"
+        );
+      }
+    }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Download
+     * ---------------------------------------------------------
+     */
+
+    function downloadOutput() {
+      if (!output.value) {
+        showToast("Nothing to download");
+        return;
+      }
+
+      const blob =
+        new Blob(
+          [output.value],
+          {
+            type: "text/plain;charset=utf-8"
+          }
+        );
+
+      const url =
+        URL.createObjectURL(blob);
+
+      const anchor =
+        document.createElement("a");
+
+      anchor.href = url;
+      anchor.download = ".env.example";
+
+      document.body.appendChild(anchor);
+
+      anchor.click();
+
+      anchor.remove();
+
+      URL.revokeObjectURL(url);
+
+      showToast(
+        "Downloaded .env.example"
+      );
+    }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Events
+     * ---------------------------------------------------------
+     */
+
+    input.addEventListener(
+      "input",
+      generate
+    );
+
+    keepComments.addEventListener(
+      "change",
+      generate
+    );
+
+    usePlaceholders.addEventListener(
+      "change",
+      generate
+    );
+
+    copyBtn.addEventListener(
+      "click",
+      copyOutput
+    );
+
+    downloadBtn.addEventListener(
+      "click",
+      downloadOutput
+    );
+
+
+    sampleBtn.addEventListener(
+      "click",
+      () => {
+        input.value = SAMPLE_ENV;
+
+        generate();
+
+        showToast(
+          "Sample .env loaded"
+        );
+      }
+    );
+
+
+    clearBtn.addEventListener(
+      "click",
+      () => {
+        input.value = "";
+
+        generate();
+
+        input.focus();
+
+        showToast(
+          "Editor cleared"
+        );
+      }
+    );
+
+
+    /*
+     * ---------------------------------------------------------
+     * Keyboard shortcuts
+     * ---------------------------------------------------------
+     *
+     * Ctrl/Cmd + Enter
+     * Generate
+     *
+     * Ctrl/Cmd + Shift + C
+     * Copy generated output
+     * ---------------------------------------------------------
+     */
+
+    document.addEventListener(
+      "keydown",
+      event => {
+        const modifier =
+          event.ctrlKey ||
+          event.metaKey;
+
+        if (!modifier) {
+          return;
+        }
+
+        if (
+          event.key === "Enter"
+        ) {
+          event.preventDefault();
+
+          generate();
+
+          showToast(
+            "Generated .env.example"
+          );
+        }
+
+        if (
+          event.shiftKey &&
+          event.key.toLowerCase() === "c"
+        ) {
+          event.preventDefault();
+
+          copyOutput();
+        }
+      }
+    );
+
+
+    /*
+     * ---------------------------------------------------------
+     * Synchronize textarea scrolling
+     * ---------------------------------------------------------
+     */
+
+    input.addEventListener(
+      "scroll",
+      () => {
+        inputLines.scrollTop =
+          input.scrollTop;
+      }
+    );
+
+    output.addEventListener(
+      "scroll",
+      () => {
+        outputLines.scrollTop =
+          output.scrollTop;
+      }
+    );
+
+
+    /*
+     * ---------------------------------------------------------
+     * Initial state
+     * ---------------------------------------------------------
+     */
+
+    generate();
+
+  </script>
+</body>
+</html>
